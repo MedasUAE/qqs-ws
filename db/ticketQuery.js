@@ -8,8 +8,7 @@ function queryGenerateTicket(){
 }
 
 function querysaveTicketDetail(){
-   // var insertQuery = 'Insert Into ticket(TicketNo,ServiceNo,PrintTime,QueueTime,StartTime) values(?,?,?,?,?);';
-   var insertQuery='INSERT INTO TICKET(TicketNo,ServiceNo,PrintTime,QueueTime,ProcessingStatus,'+
+ var insertQuery='INSERT INTO TICKET(TicketNo,ServiceNo,PrintTime,QueueTime,ProcessingStatus,'+
    'Processing,Priority,Paused,DelayByTime,DelayWayValue,'+
     'DelayTicketsPassed,Reexam,SmsTimes)'+ 
     'values(?,?,?,?,?,?,?,?,?,?,?,?,?)';

@@ -6,10 +6,6 @@ var mysql = require('mysql');
 
 var config = require('./config/config');
 
-// var redis = require('redis');
-// //creates a new redis client at host 127.0.0.1 and port 6379
-// var redisClient = redis.createClient(config.redis_port, config.redis_host);
-
 // Database connection
 db = mysql.createConnection(config.db);
 db.connect((err)=>{
@@ -32,7 +28,6 @@ const cors = corsMiddleware({
     exposeHeaders: ['API-Token-Expiry']
 });
 
-
     server.use(plugins.bodyParser({ mapParams: false })); //for body data 
     server.use(restify.plugins.queryParser());//for query params 
     server.pre(cors.preflight)
@@ -54,26 +49,10 @@ const cors = corsMiddleware({
     
         return next();
        
-        // const version = req.headers['accept-version'];
-        // if(!version)
-       
-        //     req.headers['accept-version'] = '1.0.0';
-        // else if(server.versions.indexOf(version) == -1)
-        //     return res.json(400, {error: "version not supported"})
-        // return next(null)
-
     });
     server.use(cors.actual);
-
-// server.use(plugins.authorizationParser()); //basic autherization
-// server.use(auth.isAuthenticate);
 
 server.listen(config.port,()=>{    
     require('./routes')(server);
     console.log(" qqs Server started on port: ", config.port);
 });
-
-// redisClient.on('connect', function () {
-//     console.log('connected to redis server on port : ',config.redis_port);
-// });
-//exports.redisClient = redisClient;
