@@ -10,8 +10,8 @@
   "author": "Medas",
   "license": "ISC",
   "dependencies": {
-    "mysql": "2.15.0",
-    "restify": "6.3.2",
-    "restify-cors-middleware": "1.0.1"
+    "mysql": "^2.15.0",
+    "restify": "^7.2.1",
+    "restify-cors-middleware": "^1.1.1"
   }
 }
