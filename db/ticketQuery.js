@@ -1,10 +1,11 @@
 function queryGenerateTicket(){
+    
     const columns = [
-        'tkt.TicketNo','tkt.PrintTime','serv.DigitLength','serv.ServiceType'
+        'tkt.TicketNo','tkt.ServiceNo','serv.DigitLength','serv.ServiceType'
     ];
     return ' select distinct ' + columns.join(',') + ' FROM ticket tkt ' +
         'inner join service serv on serv.ServiceNo=tkt.ServiceNo ' +
-        'where serv.ServiceNo=? order by tkt.PrintTime desc';
+        'where serv.ServiceNo=? and DATE_FORMAT(tkt.PrintTime,"%Y-%m-%d") = DATE_FORMAT(?, "%Y-%m-%d") order by tkt.PrintTime desc';
 }
 function queryGenerateFirstTicket(){
     const columns = [

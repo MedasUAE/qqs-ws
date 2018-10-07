@@ -1,23 +1,25 @@
 
 var db_query = require('../db/executeQuery');
 var ticket_query = require('../db/ticketQuery');
+var moment = require('moment');
 
-function generateTicketByServiceId(serviceId, next) {
+function generateTicketByServiceNoAndCurrentDate(serviceNo, next) {
     const query = ticket_query.queryGenerateTicket();
-    const params = [serviceId];
-    db_query.paramQuery(query, params, (err, result) => {
+    let currentDate =moment().format()
+    const params = [serviceNo,currentDate];
+     db_query.paramQuery(query, params, (err, result) => {
         if (err) return next(err);
-        generateTicket(result[0], serviceId, (err, newTicketNo) => {
-            saveTicketDetail(newTicketNo, serviceId, (err, result) => {
+        generateTicket(result[0], serviceNo, (err, newTicketNo) => {
+            saveTicketDetail(newTicketNo, serviceNo, (err, result) => {
                 return next(null, newTicketNo);
             })
         })
     })
 }
 
-function generateTicket(lastTicket, serviceId, next) {
-    if (!lastTicket && serviceId) {
-        generateFirstTicket(serviceId, (err, firstTicket) => {
+function generateTicket(lastTicket, serviceNo, next) {
+    if (!lastTicket && serviceNo) {
+        generateFirstTicket(serviceNo, (err, firstTicket) => {
             next(null, firstTicket);
         })
     } else {
@@ -32,11 +34,11 @@ function generateTicket(lastTicket, serviceId, next) {
     }
 }
 
-function saveTicketDetail(newTicket, serviceId, next) {
+function saveTicketDetail(newTicket, serviceNo, next) {
 
     const query = ticket_query.querysaveTicketDetail();
     let currentDate = new Date();
-    const params = [newTicket, serviceId, currentDate, currentDate, 0, 0, 0, 0, 1, 0, 0, 0, 0];
+    const params = [newTicket, serviceNo, currentDate, currentDate, 0, 0, 0, 0, 1, 0, 0, 0, 0];
     db_query.paramQuery(query, params, (err, result) => {
         if (err) return next(err);
         next(null, result);
@@ -58,9 +60,9 @@ function updateDigits(digitArr) {
     return digitArr;
 }
 
-function generateFirstTicket(serviceId, next) {
+function generateFirstTicket(serviceNo, next) {
     const query = ticket_query.queryGenerateFirstTicket();
-    const params = [serviceId];
+    const params = [serviceNo];
     db_query.paramQuery(query, params, (err, result) => {
         let firstTicket = '';
         let digits = '';
@@ -74,4 +76,4 @@ function generateFirstTicket(serviceId, next) {
         next(null, firstTicket);
     })
 }
-exports.generateTicketByServiceId = generateTicketByServiceId;
+exports.generateTicketByServiceNoAndCurrentDate = generateTicketByServiceNoAndCurrentDate;
