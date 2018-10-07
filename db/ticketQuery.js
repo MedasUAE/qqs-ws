@@ -6,6 +6,13 @@ function queryGenerateTicket(){
         'inner join service serv on serv.ServiceNo=tkt.ServiceNo ' +
         'where serv.ServiceNo=? order by tkt.PrintTime desc';
 }
+function queryGenerateFirstTicket(){
+    const columns = [
+        'serv.DigitLength','serv.ServiceType'
+    ];
+    return ' select distinct ' + columns.join(',') + ' FROM service serv ' +
+    'where serv.ServiceNo=? ';
+}
 
 function querysaveTicketDetail(){
  var insertQuery='INSERT INTO TICKET(TicketNo,ServiceNo,PrintTime,QueueTime,ProcessingStatus,'+
@@ -17,3 +24,4 @@ function querysaveTicketDetail(){
 
 exports.queryGenerateTicket = queryGenerateTicket;
 exports.querysaveTicketDetail = querysaveTicketDetail;
+exports.queryGenerateFirstTicket = queryGenerateFirstTicket;
