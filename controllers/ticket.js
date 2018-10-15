@@ -3,17 +3,27 @@ var db_query = require('../db/executeQuery');
 var ticket_query = require('../db/ticketQuery');
 var moment = require('moment');
 
-function generateTicketByServiceNoAndCurrentDate(serviceNo, next) {
-    const query = ticket_query.queryGenerateTicket();
-    let currentDate =moment().format()
-    const params = [serviceNo,currentDate];
-     db_query.paramQuery(query, params, (err, result) => {
+function generateTicketByDoctorIdAndCurrentDate(doctorId, next) {
+    const query = ticket_query.queryGetServiceNoByDoctorId();
+    const params = [doctorId];
+    db_query.paramQuery(query, params, (err, serviceMap) => {
         if (err) return next(err);
-        generateTicket(result[0], serviceNo, (err, newTicketNo) => {
-            saveTicketDetail(newTicketNo, serviceNo, (err, result) => {
-                return next(null, newTicketNo);
+        if(serviceMap.length>0){
+            let serviceNo = serviceMap[0].ServiceID;
+            const query = ticket_query.queryGenerateTicket();
+            let currentDate =moment().format();
+            const params = [serviceNo,currentDate];
+             db_query.paramQuery(query, params, (err, result) => {
+                if (err) return next(err);
+                generateTicket(result[0], serviceNo, (err, newTicketNo) => {
+                    saveTicketDetail(newTicketNo, serviceNo, (err, result) => {
+                        return next(null, newTicketNo);
+                    })
+                })
             })
-        })
+        } else {
+            return next(null, "Service not exist corresponding to that doctor");
+        } 
     })
 }
 
@@ -76,4 +86,5 @@ function generateFirstTicket(serviceNo, next) {
         next(null, firstTicket);
     })
 }
-exports.generateTicketByServiceNoAndCurrentDate = generateTicketByServiceNoAndCurrentDate;
+
+exports.generateTicketByDoctorIdAndCurrentDate = generateTicketByDoctorIdAndCurrentDate;

@@ -23,6 +23,15 @@ function querysaveTicketDetail(){
     return insertQuery;
 }
 
+function queryGetServiceNoByDoctorId(){
+    const columns = [
+        'sm.ServiceID','sm.DocName'
+    ];
+    return ' select distinct ' + columns.join(',') + ' from tblservicemap sm ' +
+    'where sm.DocID=? ';
+}
+
 exports.queryGenerateTicket = queryGenerateTicket;
 exports.querysaveTicketDetail = querysaveTicketDetail;
 exports.queryGenerateFirstTicket = queryGenerateFirstTicket;
+exports.queryGetServiceNoByDoctorId = queryGetServiceNoByDoctorId;
